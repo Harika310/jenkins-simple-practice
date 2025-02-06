@@ -55,13 +55,17 @@ pipeline {
             echo "This sections runs always"
             deleteDir()
         }
-        success{
-            mail to: 'harikaeravathri@gmail.com'
-            echo "subject: Successful Build: ${project} #${environment}"
-        }
-        failure{
-            echo "mail to: harikaeravathri@gmail.com"
-            echo "subject: Successful Build: ${project} #${environment}"
+        success {
+            mail to: 'harikaeravathri@gmail.com',
+                subject: "Successful Build: ${env.project} #${env.component}",
+                body: "The build was successful!"
+            echo "Email notification sent for successful build"
+    
+        failure {
+            mail to: 'harikaeravathri@gmail.com',
+                subject: "Failed Build: ${env.project} #${env.component}",
+                body: "The build failed!"
+            echo "Email notification sent for failed build"
         }
     }
 }
