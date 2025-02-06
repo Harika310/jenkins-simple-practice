@@ -1,10 +1,81 @@
 pipeline {
+    agent {
+        label 'agent-1'
+    }
+    options {
+        timeout(time: '30', unit: 'MINUTES')
+        disableConcurrentBuilds()
+    }
+    environment {
+        DEBUG = 'true'
+        appVersion = '' // this will become global, we can use across pipeline
+        // region = 'us-east-1'
+        // account_id = '905418172435'
+        // project = 'expense'
+        // environment = 'dev'
+        // component = 'backend'
+    }
+    // install pipeline utilitysteps plugin in jenkins
+    stages {
+        stage('Read the version') {
+            script {
+                def packageJson = readJSON file: 'package.json'
+                appVersion = packageJson.version
+                echo "App Version = ${appVersion}"
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+               
+                sh 'npm install'
+                
+            }
+        }
+        stage('Docker Build') {
+            steps {
+                sh """
+                docker build -t harika402/backend: ${appVersion} .
+                docker images
+
+                """
+
+            }
+        }
+
+
+    }
+    post {
+        always{
+            echo "This sections runs always"
+            deleteDir()
+        }
+        success{
+            mail to: 'harikaeravathri@gmail.com'
+                subject: "Successful Build: ${project} #${environment}"
+        }
+        failure{
+            mail to: 'harikaeravathri@gmail.com'
+                subject: "Successful Build: ${project} #${environment}"
+        }
+        
+    }
+}
+
+
+
+// trigger same pipeline for different regions
+/* pipeline {
     agent any
+
+    parameters {
+        choice(name: 'REGION', choices: ['us-east', 'us-west', 'eu-central'], description: 'Select the region to deploy')
+    }
 
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/Harika310/roboshop-infra-dev.git'
+                git 'https://github.com/your-repo/your-project.git'
             }
         }
         stage('Build') {
@@ -24,22 +95,33 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                sh 'scp target/your-project.jar user@server:/path/to/deploy'
+                script {
+                    if (params.REGION == 'us-east') {
+                        sh 'scp target/your-project.jar user@us-east-server:/path/to/deploy'
+                    } else if (params.REGION == 'us-west') {
+                        sh 'scp target/your-project.jar user@us-west-server:/path/to/deploy'
+                    } else if (params.REGION == 'eu-central') {
+                        sh 'scp target/your-project.jar user@eu-central-server:/path/to/deploy'
+                    }
+                }
             }
         }
     }
 
-
     post {
-        always{
-            echo "This sections runs always"
-            deleteDir()
+        always {
+            echo 'Cleaning up...'
+            deleteDir() // Clean up workspace
         }
-        success{
-            echo "This section run when pipeline success"
+        success {
+            mail to: 'team@example.com',
+                 subject: "Successful Build: ${env.JOB_NAME} #${env.BUILD_NUMBER} in ${params.REGION}",
+                 body: "Good job! The build ${env.JOB_NAME} #${env.BUILD_NUMBER} for region ${params.REGION} completed successfully."
         }
-        failure{
-            echo "This section run when pipeline failure"
+        failure {
+            mail to: 'team@example.com',
+                 subject: "Failed Build: ${env.JOB_NAME} #${env.BUILD_NUMBER} in ${params.REGION}",
+                 body: "The build ${env.JOB_NAME} #${env.BUILD_NUMBER} for region ${params.REGION} failed. Please check the logs."
         }
     }
-}
+} */
