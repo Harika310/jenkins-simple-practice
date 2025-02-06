@@ -39,7 +39,7 @@ pipeline {
             steps {
                 withAWS(region: 'us-east-1', credentials: 'aws-creds') {
                     sh """
-                    docker build -t harika402/backend:1.0.0 .
+                    docker build -t harika402/backend:${appVersion} .
 
                     docker images
                     """
