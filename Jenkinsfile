@@ -1,5 +1,11 @@
 pipeline {
     agent any
+    stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/Harika310/jenkins-simple-practice.git'
+            }
+        }
 
     stages {
         stage('Build') {
