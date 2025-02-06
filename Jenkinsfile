@@ -57,13 +57,13 @@ pipeline {
         }
         success {
             mail to: 'harikaeravathri@gmail.com',
-                subject: "Successful Build: ${env.project} #${env.component}",
+                subject: "Successful Build: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                 body: "The build was successful!"
             echo "Email notification sent for successful build"
     
         failure {
             mail to: 'harikaeravathri@gmail.com',
-                subject: "Failed Build: ${env.project} #${env.component}",
+                subject: "Failed Build: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                 body: "The build failed!"
             echo "Email notification sent for failed build"
         }
