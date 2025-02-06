@@ -1,43 +1,34 @@
 pipeline {
     agent any
-    
+
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/Harika310/jenkins-simple-practice.git'
+                git 'https://github.com/Harika310/roboshop-infra-dev.git'
             }
         }
         stage('Build') {
             steps {
-                script {
-                    sh 'mvn clean install'
-                //sh 'sleep 10'
-                }
-                
+                sh 'mvn clean compile'
             }
         }
         stage('Test') {
             steps {
-                script {
-                     sh 'mvn test'
-                }
-               
-                
+                sh 'mvn test'
+            }
+        }
+        stage('Package') {
+            steps {
+                sh 'mvn package'
             }
         }
         stage('Deploy') {
-            
             steps {
-                script {
-                    sh 'mvn deploy'
-                    //error 'pipeline failed'
-                }
-                    
-
+                sh 'scp target/your-project.jar user@server:/path/to/deploy'
             }
-        }        
-        
+        }
     }
+
 
     post {
         always{
