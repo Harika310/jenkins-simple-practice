@@ -55,14 +55,13 @@ pipeline {
             deleteDir()
         }
         success{
-            mail to: 'harikaeravathri@gmail.com'
-                subject: "Successful Build: ${project} #${environment}"
+            echo "mail to: harikaeravathri@gmail.com"
+            echo "subject: Successful Build: ${project} #${environment}"
         }
         failure{
-            mail to: 'harikaeravathri@gmail.com'
-                subject: "Successful Build: ${project} #${environment}"
+            echo "mail to: harikaeravathri@gmail.com"
+            echo "subject: Successful Build: ${project} #${environment}"
         }
-        
     }
 }
 
