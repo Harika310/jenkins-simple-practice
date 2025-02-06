@@ -60,7 +60,7 @@ pipeline {
                 subject: "Successful Build: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                 body: "The build was successful!"
             echo "Email notification sent for successful build"
-    
+        }
         failure {
             mail to: 'harikaeravathri@gmail.com',
                 subject: "Failed Build: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
@@ -69,67 +69,3 @@ pipeline {
         }
     }
 }
-
-
-
-// trigger same pipeline for different regions
-/* pipeline {
-    agent any
-
-    parameters {
-        choice(name: 'REGION', choices: ['us-east', 'us-west', 'eu-central'], description: 'Select the region to deploy')
-    }
-
-    stages {
-        stage('Checkout') {
-            steps {
-                git 'https://github.com/your-repo/your-project.git'
-            }
-        }
-        stage('Build') {
-            steps {
-                sh 'mvn clean compile'
-            }
-        }
-        stage('Test') {
-            steps {
-                sh 'mvn test'
-            }
-        }
-        stage('Package') {
-            steps {
-                sh 'mvn package'
-            }
-        }
-        stage('Deploy') {
-            steps {
-                script {
-                    if (params.REGION == 'us-east') {
-                        sh 'scp target/your-project.jar user@us-east-server:/path/to/deploy'
-                    } else if (params.REGION == 'us-west') {
-                        sh 'scp target/your-project.jar user@us-west-server:/path/to/deploy'
-                    } else if (params.REGION == 'eu-central') {
-                        sh 'scp target/your-project.jar user@eu-central-server:/path/to/deploy'
-                    }
-                }
-            }
-        }
-    }
-
-    post {
-        always {
-            echo 'Cleaning up...'
-            deleteDir() // Clean up workspace
-        }
-        success {
-            mail to: 'team@example.com',
-                 subject: "Successful Build: ${env.JOB_NAME} #${env.BUILD_NUMBER} in ${params.REGION}",
-                 body: "Good job! The build ${env.JOB_NAME} #${env.BUILD_NUMBER} for region ${params.REGION} completed successfully."
-        }
-        failure {
-            mail to: 'team@example.com',
-                 subject: "Failed Build: ${env.JOB_NAME} #${env.BUILD_NUMBER} in ${params.REGION}",
-                 body: "The build ${env.JOB_NAME} #${env.BUILD_NUMBER} for region ${params.REGION} failed. Please check the logs."
-        }
-    }
-} */
