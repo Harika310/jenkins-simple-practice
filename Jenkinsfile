@@ -10,22 +10,30 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'mvn clean install'
+                script {
+                    sh 'mvn clean install'
                 //sh 'sleep 10'
+                }
+                
             }
         }
         stage('Test') {
             steps {
-                sh 'mvn test'
+                script {
+                     sh 'mvn test'
+                }
+               
                 
             }
         }
         stage('Deploy') {
             
             steps {
-
+                script {
                     sh 'mvn deploy'
                     //error 'pipeline failed'
+                }
+                    
 
             }
         }        
